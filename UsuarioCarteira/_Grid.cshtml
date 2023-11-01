@@ -1,0 +1,72 @@
+﻿@using Liberta.Dominio.Utils
+@model List<Liberta.UI.Model.Usuario>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover" id="tblResultado">
+        <thead>
+            <tr class="fontLi2" style="background-color: #5CBB61;">
+                <td>Nome</td>
+                <td>Perfil</td>
+                <td>E-mail</td>
+                <td>CPF</td>
+                <td>Saldo Inicial</td>
+                <td>Saldo Atual</td>
+                <td>Títulos Comprados</td>
+                <td>Alterar Saldo</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Nome</td>
+                    <td>@Util.GetDescription(item.Perfil)</td>
+                    <td>@item.Email</td>
+                    <td>@item.CPF</td>
+                    <td>@item.SaldoInicial.ToString("c2")</td>
+                    <td>@item.SaldoAtual.ToString("c2")</td>
+                    <td>
+                        <a id="btnModal" data-id="@item.Id" style="font-size:15px; cursor:pointer;">
+                            <i class="fa fa-bars " title="Títulos"></i>&nbsp;
+                        </a>
+                    </td>
+                    <td>
+                        <a id="btnValor" data-id="@item.Id" style="font-size:15px; cursor:pointer;">
+                            <i class="fa fa-money" title="Excluir"></i>&nbsp;
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+    });
+
+    $("#tblResultado").on("click", '#btnModal', function (e) {
+        e.preventDefault();
+
+        var idUsuario = $(this).attr('data-id');
+
+        $.ajax({
+                cache: false,
+                url: '@Url.Action("AbrirInvestimento", "UsuarioCarteira")',
+                type: 'POST',
+                data: { idUsuario: idUsuario },
+                success: function (data) {
+                    debugger;
+                    $("#divModalConteudo").empty();
+                    $("#divModalConteudo").html(data);
+                    $("#divModal").modal("show");
+                }, error: function (jqXHR, txtStatus, errorThrown) {
+                    swal("Erro!", errorThrown, "error");
+                }
+            });
+    });
+
+
+
+</script>

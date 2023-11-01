@@ -1,0 +1,101 @@
+﻿@model Liberta.UI.Model.InvestimentoViewModel
+
+<div class="row">
+    <div class="col-lg-12">
+        <form id="formResgate" class="form-horizontal">
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3>@string.Concat(Model.NomeTitulo, " - ", Model.PercentualRentabilidadeTitulo, "% a.s")</h3>
+                </div>
+                <div class="card-body">
+                    <fieldset>
+                        @Html.HiddenFor(x => x.Id, Model.Id)
+                        <div class="form-group row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-3">
+                                @Html.Label("Mínimo de Dias para Resgate:")
+                            </div>
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(x => x.DiasResgateTitulo, Model.DiasResgateTitulo, new { @class = "form-control numero", @readonly = "readonly", @type = "text" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-3">
+                                @Html.Label("Data da Aplicação:")
+                            </div>
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(x => x.DataInvestimento, Model.DataInvestimento.ToShortDateString(), new { @class = "form-control data", @readonly = "readonly", @type = "text" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-group row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-3">
+                                @Html.Label("Valor Investido:")
+                            </div>
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(x => x.ValorInvestimento, Model.ValorInvestimento.ToString("c2"), new { @class = "form-control dinheiro", @type = "text", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-group row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-3">
+                                @Html.Label("Imposto de Renda (%):")
+                            </div>
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(x => x.IRRF, Model.IRRF.ToString(), new { @class = "form-control", @type = "text", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-group row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-3">
+                                @Html.Label("IOF (%):")
+                            </div>
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(x => x.IOF, Model.IOF.ToString(), new { @class = "form-control", @type = "text", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <br />
+                        <button id="btnResgate" type="submit" class="btn" style="background-color: #5CBB61;">Resgatar</button>
+                    </fieldset>                    
+                </div>
+            </div>
+        </form>        
+    </div>
+</div>
+
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        AplicarMascaras();
+    });
+
+
+    $("#btnResgate").click(function (e) {
+
+        e.preventDefault();
+        debugger;
+
+        $.ajax({
+            cache: false,
+            url: '@Url.Action("Resgatar", "Carteira")',
+            type: 'POST',
+            data: $("#formResgate").serialize(),
+            success: function (data) {
+                swal("Sucesso!", "Resgate feito com sucesso.", "success")
+                $("#formResgate")[0].reset();
+                location.reload();
+            }, error: function (jqXHR, txtStatus, errorThrown) {
+                swal("Erro!", errorThrown, "error");
+            }
+
+        });
+
+    });
+</script>
+

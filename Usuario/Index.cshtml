@@ -1,0 +1,245 @@
+﻿@model Liberta.UI.Model.Usuario
+
+@{
+    ViewBag.IdUsuario = true;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ // Simulando uma lista de opções de categorias (pode vir de uma fonte de dados real em seu projeto)
+    List<SelectListItem> Perfil = new List<SelectListItem>
+{
+                        new SelectListItem { Value = "2", Text = "Aluno" },
+                        new SelectListItem { Value = "1", Text = "Administrador" },
+
+
+                        }; }
+
+
+
+
+
+<div class="container mt-lg-5" style="background-color: #EAEDED; border: 2px solid transparent; border-radius: 10px;">
+    <div class="row" >
+        <div class="col-sm-1"></div>
+        <div class="col-sm-11">
+            <br />
+            <br />
+            <h2 class="fontLi">Cadastro</h2>
+            <br />
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <!--<form id="formUsuario" method="post">-->
+                    @using (Html.BeginForm("ActionName", "ControllerName", FormMethod.Post, new { id = "formUsuario", @class = "was-validated" }))
+                    {
+                        <fieldset class="form-jagged">
+                            @Html.HiddenFor(x => x.Id, Model.Id)
+                            <div class="form-group row">
+                                <div class="col-3">
+                                    <label class="fontLi2">Nome Completo:</label>
+                                </div>
+                                <div class="col-6">
+                                    @Html.TextBoxFor(x => Model.Nome, Model.Nome, new { @class = "form-control", @maxlength = "60", @required = "required" })
+                                    @Html.ValidationMessageFor(m => m.Nome, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <br />
+                            <div class="form-group row">
+                                <div class="col-3">
+                                    <label class="fontLi2">E-mail:</label>
+                                </div>
+                                <div class="col-6">
+                                    @Html.TextBoxFor(m => m.Email, Model.Email, new { @class = "form-control", @type = "email", @placeholder = "Digite o e-mail", @autocomplete = "off", @required = "required" })
+                                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <br />
+                            <div class="form-group row">
+                                <div class="col-3">
+                                    <label class="fontLi2">Senha:</label>
+                                </div>
+                                <div class="col-6">
+                                    @Html.PasswordFor(m => m.Senha, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(m => m.Senha, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <br />
+                            <div class="form-group row">
+                                <div class="col-3">
+                                    <label class="fontLi2">CPF:</label>
+                                </div>
+                                <div class="col-6">
+                                    @Html.TextBoxFor(m => m.CPF, Model.CPF, new { @class = "form-control cpf", @maxlength = "14", pattern = "[0-9]*", type = "text", @required = "required" })
+                                    @Html.ValidationMessageFor(m => m.CPF, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <br />
+                            <div class="form-group row">
+                                <div class="col-3">
+                                    <label class="fontLi2">RG:</label>
+                                </div>
+                                <div class="col-6">
+                                    @Html.TextBoxFor(m => m.RG, new { @class = "form-control rg", @maxlength = "14", pattern = "[0-9]*", type = "text", @required = "required" })
+                                    @Html.ValidationMessageFor(m => m.RG, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <br />
+                            <div class="form-group row">
+                                <div class="col-3">
+                                    <label class="fontLi2">Data de Nascimento:</label>
+                                </div>
+                                <div class="col-6">
+                                    @Html.TextBoxFor(m => m.DataNascimento, new { @class = "form-control data", @required = "required" })
+                                    @Html.ValidationMessageFor(m => m.DataNascimento, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <br />
+                            <div class="form-group row">
+                                <div class="col-3">
+                                    <label class="fontLi2">Celular:</label>
+                                </div>
+                                <div class="col-6">
+                                    @Html.TextBoxFor(m => m.Telefone, new { @class = "form-control telefone", @maxlength = "16", pattern = "[0-9]*", type = "text", @required = "required" })
+                                    @Html.ValidationMessageFor(m => m.Telefone, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <br />
+                            <div class="form-group row">
+                                <div class="col-3">
+                                    <label class="fontLi2">Tipo de Usuario:</label>
+                                </div>
+                                <div class="col-6">
+                                    @Html.DropDownListFor(m => m.Perfil, new SelectList(Enum.GetValues(typeof(Liberta.Dominio.Model.Enumeradores.EPerfil))), new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(m => m.Perfil, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <br />
+                            <button id="btnRegistrar" type="submit" class="btn" style="background-color: #5CBB61;">Registrar</button>
+                        </fieldset>
+                        <!--</form>-->}
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+
+    <center>
+        <div class="row" style="width: 90%; ">
+            @Html.Partial("_Grid", Model.listaGrid)
+        </div>
+    </center>
+</div>
+<br />
+<br />
+
+
+@section Styles {
+    <link href="@Styles.Url("~/Vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css")" rel="stylesheet" />
+    <link href="@Styles.Url("~/Vendor/bootstrap-slider/dist/css/bootstrap-slider.css")" rel="stylesheet" />
+    <link href="@Styles.Url("~/Vendor/chosen-js/chosen.css")" rel="stylesheet" />
+    <link href="@Styles.Url("~/Vendor/bootstrap-datepicker/dist/css/bootstrap-datepicker.css")" rel="stylesheet" />
+    <link href="@Styles.Url("~/Vendor/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css")" rel="stylesheet" />
+    <link href="@Styles.Url("~/Vendor/select2/dist/css/select2.css")" rel="stylesheet" />
+    <link href="@Styles.Url("~/Vendor/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.css")" rel="stylesheet" />
+    <link href="@Styles.Url("~/Vendor/components-jqueryui/themes/smoothness/jquery-ui.css")" rel="stylesheet" />
+
+}
+@section Scripts {
+    <script src="@Scripts.Url("~/Vendor/bootstrap-filestyle/src/bootstrap-filestyle.js")"></script>
+    <script src="@Scripts.Url("~/Vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.js")"></script>
+    <script src="@Scripts.Url("~/Vendor/chosen-js/chosen.jquery.js")"></script>
+    <script src="@Scripts.Url("~/Vendor/bootstrap-slider/dist/bootstrap-slider.js")"></script>
+    <script src="@Scripts.Url("~/Vendor/inputmask/dist/jquery.inputmask.bundle.js")"></script>
+    <script src="@Scripts.Url("~/Vendor/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js")"></script>
+    <script src="@Scripts.Url("~/Vendor/moment/min/moment-with-locales.js")"></script>
+    <script src="@Scripts.Url("~/Vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.js")"></script>
+    <script src="@Scripts.Url("~/Vendor/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js")"></script>
+    <script src="@Scripts.Url("~/Vendor/select2/dist/js/select2.full.js")"></script>
+    <script src="@Scripts.Url("~/Vendor/sweetalert/dist/sweetalert.min.js")"></script>
+    <script src="@Scripts.Url("~/Vendor/parsleyjs/dist/parsley.js")"></script>
+    <script src="@Scripts.Url("~/Vendor/jquery-validation/dist/jquery.validate.js")"></script>
+    <script src="@Scripts.Url("~/Vendor/components-jqueryui/jquery-ui.js")"></script>
+
+
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+    <script type="text/javascript">
+    "use strict";
+
+        $(document).ready(function () {
+            AplicarMascaras();
+
+    });
+
+    @*$("#btnRegistrar").click(function (e) {
+
+        e.preventDefault();
+        debugger;
+
+        $.ajax({
+            cache: false,
+            url: '@Url.Action("Registrar", "Usuario")',
+            type: 'POST',
+            data: $("#formUsuario").serialize(),
+            success: function (data) {
+                swal("Sucesso!", "Usuário inserido com sucesso.", "success")
+                $("#formUsuario")[0].reset();
+            }, error: function (jqXHR, txtStatus, errorThrown) {
+                swal("Erro!", errorThrown, "error");
+            }
+
+        });
+
+    });*@
+
+    $('form[id="formUsuario"]').validate({
+            rules: {
+                Nome: 'required',
+                Email: 'required',
+                Senha: 'required',
+                CPF: 'required',
+                RG: 'required',
+                DataNascimento: 'required',
+                Perfil: 'required',
+
+
+            },
+
+        errorElement: 'div',
+        errorPlacement: function (error, element) {
+
+        },
+            submitHandler: function (form) {
+
+
+                    $.ajax({
+                            cache: false,
+                            url: '@Url.Action("Registrar", "Usuario")',
+                            type: 'POST',
+                            data: $("#formUsuario").serialize(),
+                            success: function (data) {
+                                swal("Sucesso!", "Usuário inserido com sucesso.", "success")
+                                $("#formUsuario")[0].reset();
+                            }, error: function (jqXHR, txtStatus, errorThrown) {
+                                swal("Erro!", errorThrown, "error");
+                            }
+
+                    });
+            }
+    });
+
+    </script>
+}
+
+
+
+

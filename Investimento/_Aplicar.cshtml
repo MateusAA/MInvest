@@ -1,0 +1,81 @@
+﻿@model Liberta.UI.Model.InvestimentoViewModel
+
+<div class="row">
+    <div class="col-lg-12">
+        <form id="formAplicar" class="form-horizontal">
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3>@string.Concat(Model.NomeTitulo, " - ", Model.DataVencimentoTitulo)</h3>
+                </div>
+                <div class="card-body">
+                    <fieldset>
+                        @Html.HiddenFor(x => x.IdTitulo, Model.IdTitulo)
+                        <div class="form-group row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-3">
+                                @Html.Label("Mínimo de Dias para Resgate:")
+                            </div>
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(x => x.DiasResgateTitulo, Model.DiasResgateTitulo, new { @class = "form-control numero", @readonly = "readonly", @type = "text" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-3">
+                                @Html.Label("Investimento Mínimo:")
+                            </div>
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(x => x.ValorInvestimentoMinimoTitulo, Model.ValorInvestimentoMinimoTitulo, new { @class = "form-control dinheiro", @readonly = "readonly", @type = "text" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-group row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-3">
+                                @Html.Label("Valor à Investir")
+                            </div>
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(x => x.ValorInvestimento, "{0:#,##0.00}", new { @class = "form-control dinheiro", @type = "text" })
+                            </div>
+                        </div>
+                        <br />
+                        <button id="btnAplicar" type="submit" class="btn" style="background-color: #5CBB61;">Aplicar</button>
+                    </fieldset>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+        AplicarMascaras();
+    });
+
+   
+    $("#btnAplicar").click(function (e) {
+
+        e.preventDefault();
+        debugger;
+
+        $.ajax({
+            cache: false,
+            url: '@Url.Action("Aplicar", "Investimento")',
+            type: 'POST',
+            data: $("#formAplicar").serialize(),
+            success: function (data) {
+                swal("Sucesso!", "Aplicação feita com sucesso.", "success")
+                $("#formAplicar")[0].reset();
+                location.reload();
+            }, error: function (jqXHR, txtStatus, errorThrown) {
+                swal("Erro!", errorThrown, "error");
+            }
+
+        });
+
+    });
+</script>

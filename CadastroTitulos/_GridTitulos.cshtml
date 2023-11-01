@@ -1,0 +1,158 @@
+﻿@using Liberta.Dominio.Utils
+@model List<Liberta.UI.Model.CadastroTitulos>
+
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="tblResultadoT">
+        <thead>
+            <tr class="fontLi2" style="background-color: #5CBB61;font-size: 15px;">
+                <td>Nome</td>
+                <td>Rentabilidade</td>
+                <td>Iv.Minimo</td>
+                <td>Dias Resgate</td>
+                <td>Data Vencimento</td>
+                <td>IR</td>
+                <td>IOF</td>
+                <td>Tipo Ativo</td>
+                <td>Tipo Titulo</td>
+                <td>Modulo</td>
+                <td>Alterar</td>
+                <td>Excluir</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="fontLi2" style="font-size:14px;">
+                    <td>@item.Nome</td>
+                    <td>@item.PercentualRentabilidade</td>
+                    <td>@item.ValorInvestimentoMinimo</td>
+                    <td>@item.DiasResgate</td>
+                    <td>@item.DataVencimento</td>
+                    <td>@item.PercentualIR</td>
+                    <td>@item.PercentualIOF</td>
+                    <td>@item.TipoAtivo</td>
+                    <td>@item.TipoTitulo</td>
+                    <td>@item.Modulo</td>
+                    <td>
+                        <a id="btnEditar" data-id="@item.Id" style="font-size:15px; cursor:pointer;">
+                            <i class="icon-pencil" title="Editar"></i>&nbsp;
+                        </a>
+                    </td>
+                    <td>
+                        <a id="btnExcluir" data-id="@item.Id" style="font-size:15px; cursor:pointer;">
+                            <i class="icon-trash" title="Excluir"></i>&nbsp;
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/vendor/jquery-bootgrid/dist/jquery.bootgrid.css">
+}
+@section Scripts{
+    <script src="@Scripts.Url("~/Vendor/jquery-bootgrid/dist/jquery.bootgrid.js")"></script>
+    <script src="@Scripts.Url("~/Vendor/jquery-bootgrid/dist/jquery.bootgrid.fa.js")"></script>
+}
+<script type="text/javascript">
+    "use strict";
+
+    $(document).ready(function () {
+        /*$("#tblResultadoT").DataTable({});*/ /*Ferramenta de busca da tabela*/
+    });
+
+
+    $("#tblResultadoT").on("click", '#btnEditar', function (e) {
+        e.preventDefault();
+
+        var id = $(this).attr('data-id');
+        debugger;
+         $.ajax({
+            type: "POST",
+            url: '@Url.Action("Editar", "CadastroTitulos")',
+            data: { id: id },
+            cache: false
+         }).done(function (data) {
+
+             $("#Id").val(data.Id);
+             $("#Nome").val(data.Nome);
+             $("#PercentualRentabilidade").val(data.PercentualRentabilidade);
+             $("#ValorInvestimentoMinimo").val(data.ValorInvestimentoMinimo);
+             $("#DiasResgate").val(data.DiasResgate);
+             $("#DataVencimento").val(data.DataVencimento);
+             $("#PercentualIR").val(data.PercentualIR);
+             $("#PercentualIOF").val(data.PercentualIOF);
+
+             $("#TipoAtivo").html("");
+             $.each(data.ddlTipoAtivo, function (i, data) {
+                 debugger
+                 $("#TipoAtivo").append('<option value="' + data.Value + '">' + data.Text + '</option>');
+             });
+             $('select[id="TipoAtivo"] option:selected').attr("selected", null);
+             $('select[id="TipoAtivo"] option[value=' + data.TipoAtivo + ']').attr("selected", "selected");
+
+             $("#TipoTitulo").html("");
+             $.each(data.ddlTipoTitulo, function (i, data) {
+                 debugger
+                 $("#TipoTitulo").append('<option value="' + data.Value + '">' + data.Text + '</option>');
+             });
+             $('select[id="TipoTitulo"] option:selected').attr("selected", null);
+             $('select[id="TipoTitulo"] option[value=' + data.TipoTitulo + ']').attr("selected", "selected");
+
+             $("#Modulo").html("");
+             $.each(data.ddlModulos, function (i, data) {
+                 debugger
+                 $("#Modulo").append('<option value="' + data.Value + '">' + data.Text + '</option>');
+             });
+             $('select[id="Modulo"] option:selected').attr("selected", null);
+             $('select[id="Modulo"] option[value=' + data.Modulo + ']').attr("selected", "selected");
+        });
+
+    });
+
+    $("#tblResultadoT").on("click", '#btnExcluir', function (e) {
+        e.preventDefault();
+
+        var id = $(this).attr('data-id');
+
+        swal({
+            title: 'Confirma a exclusão?',
+            text: 'Deseja mesmo deletar este usuário?',
+            icon: 'warning',
+            buttons: {
+                cancel: true,
+                confirm: {
+                    text: 'Sim, quero deletar!',
+                    value: true,
+                    visible: true,
+                    className: "bg-danger",
+                    closeModal: true
+                }
+            }
+        }).then(function () {
+            Excluir(id);
+        });
+
+    });
+
+    function Excluir(id) {
+         $.ajax({
+            type: "POST",
+            url: '@Url.Action("Excluir", "CadastroTitulos")',
+            data: { id: id },
+            cache: false,
+             success: function (data) {
+                 swal("Sucesso!", "Usuário excluído com sucesso.", "success")
+                 location.reload();
+             },
+             error: function (jqXHR, txtStatus, errorThrown) {
+                 swal("Erro!", errorThrown, "error");
+             }
+        });
+
+    }
+
+</script>

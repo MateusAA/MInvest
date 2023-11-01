@@ -1,0 +1,26 @@
+﻿@model List<Liberta.UI.Model.InvestimentoViewModel>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover" id="tblResultado">
+        <thead>
+            <tr>
+                <td>Nome</td>
+                <td>Rentabilidade</td>
+                <td>Data da Aplicação</td>
+                <td>Valor Investido</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model)
+            {
+                <tr>
+                    <td>@item.NomeTitulo</td>
+                    <td>@item.PercentualRentabilidadeTitulo %</td>
+                    <td>@item.DataInvestimento.ToShortDateString()</td>
+                    <td>@item.ValorInvestimento.ToString("c2")</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
